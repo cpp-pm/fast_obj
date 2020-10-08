@@ -8,6 +8,12 @@ HunterGate(
 
 project(fast_obj LANGUAGES C CXX VERSION 1.0)
 
+# Introduce variables:
+# * CMAKE_INSTALL_LIBDIR
+# * CMAKE_INSTALL_BINDIR
+# * CMAKE_INSTALL_INCLUDEDIR
+include(GNUInstallDirs)
+
 option(BUILD_AS_LIBRARY "Build library" FALSE)
 option(BUILD_SHARED_LIBS "Build shared libraries" FALSE)
 option(BUILD_TESTS "Build tests" FALSE)
@@ -41,12 +47,6 @@ if(BUILD_TESTS)
   add_executable(test ${TEST_SRC_LIST})
   target_link_libraries(test PRIVATE fast_obj tinyobjloader::tinyobjloader)
 endif()
-
-# Introduce variables:
-# * CMAKE_INSTALL_LIBDIR
-# * CMAKE_INSTALL_BINDIR
-# * CMAKE_INSTALL_INCLUDEDIR
-include(GNUInstallDirs)
 
 set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
 set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
