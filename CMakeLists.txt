@@ -6,7 +6,7 @@ HunterGate(
     SHA1 "43ffd06cf0352babdbe28d333adb15379ab59681"
 )
 
-project(fast_obj LANGUAGES C CXX VERSION 1.0)
+project(fast_obj VERSION 1.0)
 
 # Introduce variables:
 # * CMAKE_INSTALL_LIBDIR
@@ -30,6 +30,7 @@ if(BUILD_AS_LIBRARY)
   else()
     add_library(fast_obj STATIC ${FAST_OBJ_SRC_LIST} ${FAST_OBJ_HDR_LIST})
   endif()
+  set_target_properties(fast_obj PROPERTIES DEBUG_POSTFIX d)
 else()
   message("making interface library")
   add_library(fast_obj INTERFACE)
@@ -56,6 +57,16 @@ set(CONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}")
 
 set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 set(NAMESPACE "${PROJECT_NAME}::")
+
+if(BUILD_AS_LIBRARY)
+  target_compile_definitions(fast_obj INTERFACE FAST_OBJ_USE_HUNTER)
+
+  set(GENERATED_FAST_OBJ_HEADER "${GENERATED_DIR}/fast_obj.h")
+  file(READ "${CMAKE_CURRENT_SOURCE_DIR}/fast_obj.h" FAST_OBJ_HEADER_STRING)
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/fast_obj.h.in" "${GENERATED_FAST_OBJ_HEADER}")
+
+  set(FAST_OBJ_HDR_LIST "${GENERATED_FAST_OBJ_HEADER}")
+endif()
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
